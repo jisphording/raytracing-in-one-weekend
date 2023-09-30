@@ -1,8 +1,11 @@
-#include "sdltemplate.h"
 #include <fstream>
 #include <iostream>
 #include <string> // to_string
 #include <sstream> // to_string
+
+#include "sdltemplate.h"
+#include "color.h"
+#include "vec3.h"
 
 // TO_STRING
 //
@@ -43,15 +46,17 @@ int main(int argc, char* argv[]) { // those args in the brackets are needed on w
 		std::clog << "\rScanlines remaining: " << (height - y) << ' ' << std::flush;
 
 		for (int x = 0; x < width; x++) {
-			float r = float(x) / float(width);
-			float g = float(y) / float(height);
-			float b = 0.2;
-			int ir = int(255.99 * r);
-			int ig = int(255.99 * g);
-			int ib = int(255.99 * b);
+			vec3 col(
+				float(x) / float(width), 
+				float(y) / float(height), 
+				0.2);
 
-			sdltemplate::setDrawColor(sdltemplate::createColor(ir, ig, ib, 255));
-			sdltemplate::drawPoint(x, height - y); // Flip The UV coordinate
+			auto pixel_color = color(
+				double(x) / (width - 1),
+				double(y) / (height - 1), 
+				0);
+			
+			write_color(col, height, x, y);
 
 			/*
 			// Convert int to string...
