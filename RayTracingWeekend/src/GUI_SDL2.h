@@ -1,8 +1,12 @@
+#pragma once
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
 
-namespace sdltemplate {
+namespace GUI_SDL2 {
+
+    // SETTINGS
+    // ---------- ---------- ---------- ---------- ---------- //
 
     SDL_Color bkg;
     SDL_Color blue = { 0,0,255,255 };
@@ -20,6 +24,9 @@ namespace sdltemplate {
     Uint32 mousestate;
     SDL_Event event;
     bool running;
+
+    // INIT
+    // ---------- ---------- ---------- ---------- ---------- //
 
     SDL_Color createColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
         SDL_Color c{ r,g,b,a };
@@ -51,6 +58,9 @@ namespace sdltemplate {
         sdl();
     }
 
+    // UPDATE KEYS
+    // ---------- ---------- ---------- ---------- ---------- //
+
     void updateKeys() {
         keystates = SDL_GetKeyboardState(NULL);
         while (SDL_PollEvent(&event)) {
@@ -61,6 +71,9 @@ namespace sdltemplate {
     }
 
     void setDrawColor(SDL_Color c) { SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a); }
+
+    // RENDERING
+    // ---------- ---------- ---------- ---------- ---------- //
 
     void begin_render() {
         SDL_SetRenderTarget(renderer, screen);
@@ -80,18 +93,24 @@ namespace sdltemplate {
         SDL_Quit();
     }
 
+    // UPDATE
+    // ---------- ---------- ---------- ---------- ---------- //
+
     void loop() {
         end_render();
         updateKeys();
         begin_render();
     }
 
+    // SAVE IMAGE TO DISK
+    // ---------- ---------- ---------- ---------- ---------- //
+
     void save_texture(const char* file_name, SDL_Renderer* m_renderer = renderer, SDL_Texture* m_texture = screen) {
         SDL_Texture* target = SDL_GetRenderTarget(m_renderer);
         SDL_SetRenderTarget(m_renderer, m_texture);
         SDL_Surface* surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
         SDL_RenderReadPixels(m_renderer, NULL, surface->format->format, surface->pixels, surface->pitch);
-        IMG_SavePNG( surface, file_name);
+        IMG_SavePNG(surface, file_name);
     }
 
 } // namespace sdltemplate
