@@ -19,17 +19,17 @@ namespace color
 
 
 	// WRITE_COLOR
-	void write_color(int image_width, int image_height, int x, int y)
+	void write_color(int image_width, int image_height, int pixel_posX, int pixel_posY)
 	{
-		float r = float(x) / float(image_width);
-		float g = float(y) / float(image_height);
+		float r = float(pixel_posX) / float(image_width);
+		float g = float(pixel_posY) / float(image_height);
 		float b = 0.2;
 
 		int ir = int(255.99 * r);
 		int ig = int(255.99 * g);
 		int ib = int(255.99 * b);
 
-		GUI_SDL2::setDrawColor(GUI_SDL2::createColor(ir, ig, ib, 255));
-		GUI_SDL2::drawPoint(x, image_height - y);
+		GUI_SDL2::setDrawColor(createColor(ir, ig, ib, 255));
+		GUI_SDL2::drawPoint(pixel_posX, image_height - pixel_posY);
 	}
 }
