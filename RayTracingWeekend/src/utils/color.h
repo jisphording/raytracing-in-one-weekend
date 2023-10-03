@@ -10,15 +10,15 @@ namespace color
 	// DEFINITIONS
 	using color = vec3;
 
+	// UTILITY FUNCTIONS
+	//
 	SDL_Color createColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 		SDL_Color c{ r,g,b,a };
 		return c;
 	}
 
-	// UTILITY FUNCTIONS
-
-
 	// WRITE_COLOR
+	//
 	void write_color(int image_width, int image_height, int pixel_posX, int pixel_posY)
 	{
 
@@ -32,6 +32,17 @@ namespace color
 		int ir = int(255.99 * colorValue[0]);
 		int ig = int(255.99 * colorValue[1]);
 		int ib = int(255.99 * colorValue[2]);
+
+		// Draw colors to the screen
+		GUI_SDL2::setDrawColor(createColor(ir, ig, ib, 255));
+		GUI_SDL2::drawPoint(pixel_posX, image_height - pixel_posY);
+	}
+
+	void simple_color(int image_width, int image_height, int pixel_posX, int pixel_posY, color pixel_color) {
+		// Convert linear color values to integers 0 - 255
+		int ir = int(255.99 * pixel_color.x());
+		int ig = int(255.99 * pixel_color.y());
+		int ib = int(255.99 * pixel_color.z());
 
 		// Draw colors to the screen
 		GUI_SDL2::setDrawColor(createColor(ir, ig, ib, 255));
