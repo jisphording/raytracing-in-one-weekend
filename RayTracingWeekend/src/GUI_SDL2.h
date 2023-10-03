@@ -40,15 +40,19 @@ namespace GUI_SDL2 {
         screen = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
     }
 
-    void drawPoint(SDL_Point p) { SDL_RenderDrawPoint(renderer, p.x, p.y); }
-    void drawPoint(int x, int y) { SDL_RenderDrawPoint(renderer, x, y); }
-
     void sdl(const char* t, int w, int h) {
         title = t;
         width = w;
         height = h;
         sdl();
     }
+
+    // COLOR FUNCTIONS
+    // ---------- ---------- ---------- ---------- ---------- //
+
+    void drawPoint(SDL_Point p) { SDL_RenderDrawPoint(renderer, p.x, p.y); }
+    void drawPoint(int x, int y) { SDL_RenderDrawPoint(renderer, x, y); }
+    void setDrawColor(SDL_Color c) { SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a); }
 
     // UPDATE KEYS
     // ---------- ---------- ---------- ---------- ---------- //
@@ -61,8 +65,6 @@ namespace GUI_SDL2 {
         }
         mousestate = SDL_GetMouseState(&mouse.x, &mouse.y);
     }
-
-    void setDrawColor(SDL_Color c) { SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a); }
 
     // RENDERING
     // ---------- ---------- ---------- ---------- ---------- //
