@@ -21,18 +21,23 @@ void rendering::message(std::string message)
 
 void rendering::render(int image_width, int image_height) {
 
+	// INIT
+	// ---------- ---------- ---------- ---------- ---------- //
+
 	rendering::message("Rendering started!\n");
 	rendering::message("Image size: " + to_string(image_width) + "x" + to_string(image_height) + "px\n");
+
+	GUI_SDL2::sdl("RayTracingWeekend", image_width, image_height);
+	GUI_SDL2::update();
 
 	// RENDER IMAGE
 	// ---------- ---------- ---------- ---------- ---------- //
 
-	GUI_SDL2::sdl("Ray Tracer", image_width, image_height);
-    GUI_SDL2::loop();
+    for (int pixel_posY = image_height - 1; pixel_posY >= 00; pixel_posY--) {
+        for (int pixel_posX = 0; pixel_posX < image_width; pixel_posX++) {
 
-    for (int y = image_height - 1; y >= 00; y--) {
-        for (int x = 0; x < image_width; x++) {
-			color::write_color(image_width, image_height, x, y);
+			color::write_color(image_width, image_height, pixel_posX, pixel_posY);
+
         }
     }
 
@@ -40,7 +45,7 @@ void rendering::render(int image_width, int image_height) {
 	// ---------- ---------- ---------- ---------- ---------- //
 
     while (GUI_SDL2::running) {
-        GUI_SDL2::loop();
+        GUI_SDL2::update();
     }
 
 	// FILE I/O	
