@@ -1,97 +1,189 @@
-#include <fstream>
-#include <iostream>
-#include <string> // to_string
-#include <sstream> // to_string
-
-#include "sdltemplate.h"
-#include "color.h"
-#include "vec3.h"
-
-// TO_STRING
+// RayTracingWeekend.cpp : Definiert den Einstiegspunkt für die Anwendung.
 //
-// For some reason to have to_string work I have to define it as a template here.
-template <typename T>
-std::string to_string(T value)
+
+#include "framework.h"
+#include "RayTracingWeekend.h"
+
+#include "./src/Rendering.h"
+
+#define MAX_LOADSTRING 100
+
+// Globale Variablen:
+HINSTANCE hInst;                                // Aktuelle Instanz
+WCHAR szTitle[MAX_LOADSTRING];                  // Titelleistentext
+WCHAR szWindowClass[MAX_LOADSTRING];            // Der Klassenname des Hauptfensters.
+
+// Vorwärtsdeklarationen der in diesem Codemodul enthaltenen Funktionen:
+ATOM                MyRegisterClass(HINSTANCE hInstance);
+BOOL                InitInstance(HINSTANCE, int);
+LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+                     _In_opt_ HINSTANCE hPrevInstance,
+                     _In_ LPWSTR    lpCmdLine,
+                     _In_ int       nCmdShow)
 {
-	std::ostringstream os;
-	os << value;
-	return os.str();
+    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
+
+    // M A I N
+    // ---------- ---------- ---------- ---------- ---------- //
+
+    rendering::message("Application Launched!\n");
+    rendering::render(800, 600);
+
+    // ---------- ---------- ---------- ---------- ---------- //
+    
+
+    // Globale Zeichenfolgen initialisieren
+    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_RAYTRACINGWEEKEND, szWindowClass, MAX_LOADSTRING);
+    MyRegisterClass(hInstance);
+
+    // Anwendungsinitialisierung ausführen:
+    if (!InitInstance (hInstance, nCmdShow))
+    {
+        return FALSE;
+    }
+
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_RAYTRACINGWEEKEND));
+
+    MSG msg;
+
+    // Hauptnachrichtenschleife:
+    while (GetMessage(&msg, nullptr, 0, 0))
+    {
+        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+
+    return (int) msg.wParam;
 }
 
 
-// M A I N
-// ---------- ---------- ---------- ---------- ---------- //
 
-int main(int argc, char* argv[]) { // those args in the brackets are needed on windows for SDL2 to work
+//
+//  FUNKTION: MyRegisterClass()
+//
+//  ZWECK: Registriert die Fensterklasse.
+//
+ATOM MyRegisterClass(HINSTANCE hInstance)
+{
+    WNDCLASSEXW wcex;
 
-	// IMAGE SIZE
-	// ---------- ---------- ---------- ---------- ---------- //
+    wcex.cbSize = sizeof(WNDCLASSEX);
 
-	int width = 800;
-	int height = 400;
+    wcex.style          = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc    = WndProc;
+    wcex.cbClsExtra     = 0;
+    wcex.cbWndExtra     = 0;
+    wcex.hInstance      = hInstance;
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_RAYTRACINGWEEKEND));
+    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_RAYTRACINGWEEKEND);
+    wcex.lpszClassName  = szWindowClass;
+    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-	std::string img_format("P3\n" + to_string(width) + ' ' + to_string(height) + "\n255");
-	std::string img_data_stream("");
-	std::string img_data("");
+    return RegisterClassExW(&wcex);
+}
 
-	// RENDER IMAGE
-	// ---------- ---------- ---------- ---------- ---------- //
+//
+//   FUNKTION: InitInstance(HINSTANCE, int)
+//
+//   ZWECK: Speichert das Instanzenhandle und erstellt das Hauptfenster.
+//
+//   KOMMENTARE:
+//
+//        In dieser Funktion wird das Instanzenhandle in einer globalen Variablen gespeichert, und das
+//        Hauptprogrammfenster wird erstellt und angezeigt.
+//
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+{
+   hInst = hInstance; // Instanzenhandle in der globalen Variablen speichern
 
-	sdltemplate::sdl("Ray Tracer", width, height);
-	sdltemplate::loop();
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-	// Print an array of random colors to the screen
-	for (int y = height - 1; y >= 00; y--) {
-		// Progress indicator
-		std::clog << "\rScanlines remaining: " << (height - y) << ' ' << std::flush;
+   if (!hWnd)
+   {
+      return FALSE;
+   }
 
-		for (int x = 0; x < width; x++) {
-			vec3 col(
-				float(x) / float(width), 
-				float(y) / float(height), 
-				0.2);
+   ShowWindow(hWnd, nCmdShow);
+   UpdateWindow(hWnd);
 
-			auto pixel_color = color(
-				double(x) / (width - 1),
-				double(y) / (height - 1), 
-				0);
-			
-			write_color(col, height, x, y);
+   return TRUE;
+}
 
-			/*
-			// Convert int to string...
-			std::string sr = to_string(ir);
-			std::string sg = to_string(ig);
-			std::string sb = to_string(ib);
+//
+//  FUNKTION: WndProc(HWND, UINT, WPARAM, LPARAM)
+//
+//  ZWECK: Verarbeitet Meldungen für das Hauptfenster.
+//
+//  WM_COMMAND  - Verarbeiten des Anwendungsmenüs
+//  WM_PAINT    - Darstellen des Hauptfensters
+//  WM_DESTROY  - Ausgeben einer Beendenmeldung und zurückkehren
+//
+//
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_COMMAND:
+        {
+            int wmId = LOWORD(wParam);
+            // Menüauswahl analysieren:
+            switch (wmId)
+            {
+            case IDM_ABOUT:
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+                break;
+            case IDM_EXIT:
+                DestroyWindow(hWnd);
+                break;
+            default:
+                return DefWindowProc(hWnd, message, wParam, lParam);
+            }
+        }
+        break;
+    case WM_PAINT:
+        {
+            PAINTSTRUCT ps;
+            HDC hdc = BeginPaint(hWnd, &ps);
+            // TODO: Zeichencode, der hdc verwendet, hier einfügen...
+            EndPaint(hWnd, &ps);
+        }
+        break;
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0;
+}
 
-			// ...to write to file
-			std::stringstream ss(sr + ' ' + sg + ' ' + sb);
-			img_data = img_data + '\n' + ss.str(); 
-			*/
-		}
-	}
+// Meldungshandler für Infofeld.
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+        return (INT_PTR)TRUE;
 
-	// DISPLAY IMAGE ON SCREEN
-	// ---------- ---------- ---------- ---------- ---------- //
-
-	while (sdltemplate::running) {
-		sdltemplate::loop();
-	}
-
-	// FILE I/O	
-	// ---------- ---------- ---------- ---------- ---------- //
-	//
-	// When the Rendering loop is stopped the file is written to disk
-
-	// .PPM
-	/*
-	std::ofstream file("./data/img_data.ppm");
-	file << img_format + img_data;
-	file.close();
-	*/
-
-	// .PNG
-	sdltemplate::save_texture("./data/image_data.png");
-
-	return 0; // SDL2 has to return something to work on windows
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
+    return (INT_PTR)FALSE;
 }
