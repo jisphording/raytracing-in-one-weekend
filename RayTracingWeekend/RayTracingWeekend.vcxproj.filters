@@ -42,12 +42,18 @@
     <ClInclude Include="src\utils\vec3.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\Ray.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RayTracingWeekend.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="src\Rendering.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.h">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

@@ -151,11 +151,13 @@
     <ClInclude Include="src\Rendering.h" />
     <ClInclude Include="src\templates\to_string.h" />
     <ClInclude Include="src\utils\color.h" />
+    <ClInclude Include="src\utils\Ray.h" />
     <ClInclude Include="src\utils\vec3.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RayTracingWeekend.cpp" />
+    <ClCompile Include="src\Camera.h" />
     <ClCompile Include="src\Rendering.cpp" />
   </ItemGroup>
   <ItemGroup>
