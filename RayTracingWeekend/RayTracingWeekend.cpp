@@ -31,7 +31,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // ---------- ---------- ---------- ---------- ---------- //
 
     rendering::message("Application Launched!\n");
-    rendering::render(800, 600);
+    rendering::render(640, 360);
 
     // ---------- ---------- ---------- ---------- ---------- //
     
