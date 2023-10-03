@@ -1,14 +1,7 @@
 # Visual Studio
 .vs
 x64
-.sln
-
 
 # Data
 data
 libs
-*.vcxproj*
-
-# Images
-*.ico
-*.rc
