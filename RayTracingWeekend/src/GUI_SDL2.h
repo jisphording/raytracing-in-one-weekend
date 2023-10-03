@@ -8,9 +8,6 @@ namespace GUI_SDL2 {
     // SETTINGS
     // ---------- ---------- ---------- ---------- ---------- //
 
-    SDL_Color bkg;
-    SDL_Color blue = { 0,0,255,255 };
-
     const char* title = "SDL2 Template";
     int width = 500, height = 500;
     SDL_Renderer* renderer;
@@ -27,11 +24,6 @@ namespace GUI_SDL2 {
 
     // INIT
     // ---------- ---------- ---------- ---------- ---------- //
-
-    SDL_Color createColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-        SDL_Color c{ r,g,b,a };
-        return c;
-    }
 
     void sdl() {
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
@@ -96,7 +88,7 @@ namespace GUI_SDL2 {
     // UPDATE
     // ---------- ---------- ---------- ---------- ---------- //
 
-    void loop() {
+    void update() {
         end_render();
         updateKeys();
         begin_render();
